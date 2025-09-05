@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>HAMBALI</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="cordova.js"></script> <!-- Hanya aktif saat di build dengan Cordova -->
+</head>
+<body>
+    <div class="container">
+        <h1>Carnom Cracker</h1>
+
+        <div class="status-panel">
+            <button id="startBtn">Start</button>
+            <button id="stopBtn" disabled>Stop</button>
+            <button id="clearBtn">Clear</button>
+        </div>
+
+        <div class="wallet-status">
+            <p><strong>Current Seed:</strong> <span id="currentSeed">-</span></p>
+            <p><strong>Checked:</strong> <span id="checkedCount">0</span></p>
+            <p><strong>Found:</strong> <span id="foundAmount">0.00000000 ETH</span></p>
+        </div>
+
+        <div class="results">
+            <h2>Results:</h2>
+            <ul id="resultsList"></ul>
+        </div>
+    </div>
+
+    <script>
+        const startBtn = document.getElementById("startBtn");
+        const stopBtn = document.getElementById("stopBtn");
+        const clearBtn = document.getElementById("clearBtn");
+        const currentSeed = document.getElementById("currentSeed");
+        const checkedCount = document.getElementById("checkedCount");
+        const foundAmount = document.getElementById("foundAmount");
+        const resultsList = document.getElementById("resultsList");
+
+        let running = false;
+        let counter = 0;
+
+        function generateSeed() {
+            const words = ["crypto", "blockchain", "wallet", "bitcoin", "ethereum", "node", "transaction", "address", "hash", "token", "mining", "ledger", "decentralized", "altcoin", "consensus", "proof", "stake", "chain", "smart", "contract", "fitness", "training", "exercise", "health", "strength", "muscle", "reps", "sets", "gym", "workout", "diet", "nutrition", "cardio", "endurance", "performance", "recovery", "sweat", "lift", "bulk", "cut", "stamina", "flex", "stretch", "soccer", "basketball", "baseball", "tennis", "golf", "swimming", "cycling", "running", "hockey", "volleyball", "football", "rugby", "boxing", "wrestling", "badminton", "skiing", "snowboarding", "surfing", "skateboarding", "rowing", "yoga", "pilates", "martial", "climbing", "gymnastics", "diving", "track", "field", "archery", "fencing", "tabletennis", "cricket", "lacrosse", "softball", "billiards", "bowling", "triathlon", "canoeing", "kayaking", "riding", "trekking", "skating", "judo", "kickboxing", "shooting", "darts", "speed", "motocross", "sledding", "crossfit", "lifting", "synchronized", "snowshoeing", "wrestling", "taekwondo", "sailing", "windsurfing", "freestyle", "artistic", "biathlon", "handball", "paddle", "ski", "bobsled", "luge", "skeleton", "cheerleading", "polevault", "high", "long", "discus", "hammer", "decathlon", "heptathlon", "ball", "bat", "racket", "stick", "glove", "helmet", "shirt", "shoes", "bag", "net", "mask", "paddle", "board", "mallet", "jersey", "trophy", "mat", "rope", "wheels", "saddle", "puck", "belt", "goggles", "tee", "caps", "jacket", "cage", "boots", "hurdles", "wheel", "cart", "cup", "cane", "vest", "gun", "bridle", "shinguard", "mouthguard", "uniform", "holster", "hoop", "sweater", "gloves", "shorts", "pad", "ring", "score", "skate", "disc", "towel"];
+            let seed = [];
+            for (let i = 0; i < 12; i++) {
+                seed.push(words[Math.floor(Math.random() * words.length)]);
+            }
+            return seed.join(" ");
+        }
+
+        function simulateSearch() {
+            if (!running) return;
+
+            const seed = generateSeed();
+            currentSeed.textContent = seed;
+            counter++;
+            checkedCount.textContent = counter;
+
+            const found = Math.random() < 0.0001; // simulasi peluang sangat kecil
+            if (found) {
+                const amount = (Math.random() * 2).toFixed(8);
+                foundAmount.textContent = amount + " ETH";
+                const li = document.createElement("li");
+                li.textContent = ` ${amount} ETH - ${seed}`;
+                resultsList.appendChild(li);
+            }
+
+            setTimeout(simulateSearch, 100);
+        }
+
+        startBtn.addEventListener("click", () => {
+            running = true;
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            simulateSearch();
+        });
+
+        stopBtn.addEventListener("click", () => {
+            running = false;
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+        });
+
+        clearBtn.addEventListener("click", () => {
+            counter = 0;
+            currentSeed.textContent = "-";
+            checkedCount.textContent = "0";
+            foundAmount.textContent = "0.00000000 ETH";
+            resultsList.innerHTML = "";
+        });
+    </script>
+</body>
+</html>
